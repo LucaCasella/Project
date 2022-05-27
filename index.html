@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top Games</title>
+</head>
+<body>
+
+
+
+
+
+
+
+<script>
+    let getGameResponse = async function (url) {
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com',
+                'X-RapidAPI-Key': '81d480c8b9mshe4ecc690cab5011p149bfejsndf734379f559'
+            }
+        };
+
+
+        const response = await fetch(url, options)
+        const status = response.ok;
+        if(status){
+            return await response.json();
+        }else{
+            throw new Error("Invalid");
+        }
+    }
+
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08'));
+
+
+// LeagueofLegends https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08
+
+// Minecraft https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08
+
+// Fortnite https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08
+
+// 7 Days to Die https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08
+</script>
+</body>
+</html>
+
