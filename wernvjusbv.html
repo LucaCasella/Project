@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi Service</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <select id="list">
+        <option value="Twitch Games Popularity">Twitch Games Popularity</option>
+        <option value="Airport Info">Airport Info</option>
+        <option value="Corona Data">Corona Data</option>
+    </select><br>
+
+    <span id="visualize"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+<script>
+
+
+
+    let getGameResponse = async function (url, host, userChoice) {
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com',
+                'X-RapidAPI-Key': '81d480c8b9mshe4ecc690cab5011p149bfejsndf734379f559'
+            }
+        };
+
+
+        const response = await fetch(url, options)
+        const status = response.ok;
+        if(status){
+            return await response.json();
+        }else{
+            throw new Error("Invalid");
+        }
+    }
+
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08'));
+    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08'));
+
+    const choices = [];
+
+
+
+    document.getElementById("list").addEventListener("change", fun1);
+
+    function fun1() {
+        const spanEl = document.getElementById("visualize");
+        const elementTaken = document.getElementById("list").value;
+        if(typeof elementTaken === 'string'){
+
+            spanEl.innerHTML = elementTaken;
+            const element = spanEl.innerHTML;
+            //choices.push(element);
+            choices.splice(0, 1, element);
+            console.log(choices[0]);
+            return element;
+
+
+
+        }else
+            throw new Error("C'è qualcosa che nn va");
+
+    }
+
+
+
+
+
+
+
+
+
+    // League of Legends https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08
+
+    // Minecraft https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08
+
+    // Fortnite https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08
+
+    // 7 Days to Die https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08
+</script>
+</body>
+</html>
+
