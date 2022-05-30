@@ -8,9 +8,10 @@
 <body>
 <div class="container">
     <select id="list">
-        <option value="Twitch Games Popularity">Twitch Games Popularity</option>
+        <option value=""></option>
         <option value="Airport Info">Airport Info</option>
         <option value="Corona Data">Corona Data</option>
+        <option value="Twitch Games Popularity">Twitch Games Popularity</option>
     </select><br>
 
     <span id="visualize"></span>
@@ -19,94 +20,121 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 <script>
 
-
-
-    let getGameResponse = async function (url, host, userChoice) {
+    class Choice {
+        constructor(host, url) {
+            this.host = host;
+            this.url = url;
+        }
+    }
+    class Airport {
+        constructor(name, location, state) {
+            this.name = name;
+            this.location = location;
+            this.state = state;
+        }
+    }
+    const getApiResponse = async function () {
         const options = {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com',
+                'X-RapidAPI-Host': getApiBasedOnApiChoice(userChoice()).host,
                 'X-RapidAPI-Key': '81d480c8b9mshe4ecc690cab5011p149bfejsndf734379f559'
             }
         };
 
-
-        const response = await fetch(url, options)
+        const response = await fetch(getApiBasedOnApiChoice(userChoice()).url, options)
         const status = response.ok;
         if(status){
+            //console.log("Ciao questo è l'host "+ getApiBasedOnApiChoice(userChoice()).host + " e questo è l'url " + getApiBasedOnApiChoice(userChoice()).url);
             return await response.json();
         }else{
             throw new Error("Invalid");
         }
     }
 
-    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08'));
-    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08'));
-    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08'));
-    console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08'));
+
 
     const choices = [];
 
     //NON BUONA
-
-    function getUserChoice()
-    {
-
-        const choice = document.getElementById("list");
-        choice.addEventListener("change", fun1)
-        {
-            if(fun1() === "Airport Info")
-            {
-                console.log("ffdfdfdfd");
-            }
-        }
-
-    }
-
-    //BUONA
-
     // function getUserChoice()
     // {
     //
     //     const choice = document.getElementById("list");
-    //     // const prova = fun1();
-    //     // choice.addEventListener("change", fun1)
-    //     choice.addEventListener("change", (e) => {
-    //
-    //         fun1();
-    //         if(fun1() === "Airport Info"){
+    //     choice.addEventListener("change", fun1)
+    //     {
+    //         if(fun1() === "Airport Info")
+    //         {
     //             console.log("ffdfdfdfd");
     //         }
-    //     })
-    //
-    //     //console.log("Sono la funzione del dio cane che mi ha fatto porcodiare col valore " + fun1());
+    //     }
     //
     // }
 
+    //BUONA
+    function getUserChoice()
+    {
+        const choice = document.getElementById("list");
+        choice.addEventListener("change", (e) =>
+        {
+            //getApiBasedOnApiChoice(userChoice());
+            getApiResponse().then(result => {
+                const aereoporto = new Airport(result.name, result.location, result.state)
+                console.log("Il nome dell'aereoporto è " + aereoporto.name + " nella località di " + aereoporto.location +
+                    "nello stato di" + aereoporto.state);
+            })
+        })
+    }
+
+    // function getUserChoice()
+    // {
+    //     const choice = document.getElementById("list");
+    //     choice.addEventListener("change", (e) =>
+    //     {
+    //         getApiBasedOnApiChoice(userChoice());
+    //
+    //     })
+    // }
 
 
-    function fun1() {
-    const spanEl = document.getElementById("visualize");
+    function userChoice() {
+        const spanEl = document.getElementById("visualize");
         const elementTaken = document.getElementById("list").value;
-        if(typeof elementTaken === 'string'){
-
-                spanEl.innerHTML = elementTaken;
-                const element = spanEl.innerHTML;
-                 //choices.push(element);
-                 choices.splice(0, 1, element);
-                 // console.log(choices[0]);
-                 return element;
-
-
-
-        }else
-        throw new Error("C'è qualcosa che nn va");
+        if(typeof elementTaken === 'string')
+        {
+            spanEl.innerHTML = elementTaken;
+            const element = spanEl.innerHTML;
+            choices.splice(0, 1, element);
+            return element;
+        }
+        else
+            throw new Error("C'è qualcosa che nn va");
 
     }
 
 
+    function getApiBasedOnApiChoice(choice)
+    {
+        switch (choice)
+        {
+            case "Airport Info":
+                const hostAirport = 'airport-info.p.rapidapi.com';
+                const urlAirport = 'https://airport-info.p.rapidapi.com/airport?iata=AAB';
+                return new Choice(hostAirport, urlAirport);
+            case "Corona Data":
+                const hostCorona = 'vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com';
+                const urlCorona = 'https://vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com/api/npm-covid-data/world';
+                return new Choice(hostCorona, urlCorona);
+            case "Twitch Games Popularity":
+                const hostTwitch = 'twitch-game-popularity.p.rapidapi.com';
+                const urlTwitch = 'https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08';
+                return new Choice(hostTwitch, urlTwitch);
+            default:
+                console.log("non va bene");
+        }
+    }
 
-getUserChoice();
+    getUserChoice();
 
 
 
@@ -124,13 +152,32 @@ getUserChoice();
 
 
 
-// League of Legends https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08
 
-// Minecraft https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08
 
-// Fortnite https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08
 
-// 7 Days to Die https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08
+
+
+
+
+
+
+
+
+
+
+
+    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08'));
+    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08'));
+    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08'));
+    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08'));
+
+    // League of Legends https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08
+
+    // Minecraft https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08
+
+    // Fortnite https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08
+
+    // 7 Days to Die https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08
 </script>
 </body>
 </html>
