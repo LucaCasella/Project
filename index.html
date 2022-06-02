@@ -26,6 +26,7 @@
             this.url = url;
         }
     }
+
     class Airport {
         constructor(name, location, state) {
             this.name = name;
@@ -33,6 +34,9 @@
             this.state = state;
         }
     }
+
+
+
     const getApiResponse = async function () {
         const options = {
             method: 'GET',
@@ -52,32 +56,13 @@
         }
     }
 
-
-
     const choices = [];
 
-    //NON BUONA
-    // function getUserChoice()
-    // {
-    //
-    //     const choice = document.getElementById("list");
-    //     choice.addEventListener("change", fun1)
-    //     {
-    //         if(fun1() === "Airport Info")
-    //         {
-    //             console.log("ffdfdfdfd");
-    //         }
-    //     }
-    //
-    // }
-
-    //BUONA
     function getUserChoice()
     {
         const choice = document.getElementById("list");
         choice.addEventListener("change", (e) =>
         {
-            //getApiBasedOnApiChoice(userChoice());
             getApiResponse().then(result => {
                 const aereoporto = new Airport(result.name, result.location, result.state)
                 console.log("Il nome dell'aereoporto è " + aereoporto.name + " nella località di " + aereoporto.location +
@@ -86,24 +71,13 @@
         })
     }
 
-    // function getUserChoice()
-    // {
-    //     const choice = document.getElementById("list");
-    //     choice.addEventListener("change", (e) =>
-    //     {
-    //         getApiBasedOnApiChoice(userChoice());
-    //
-    //     })
-    // }
-
-
     function userChoice() {
         const spanEl = document.getElementById("visualize");
         const elementTaken = document.getElementById("list").value;
         if(typeof elementTaken === 'string')
         {
-            spanEl.innerHTML = elementTaken;
-            const element = spanEl.innerHTML;
+            // spanEl.innerHTML = elementTaken;
+            const element = elementTaken;
             choices.splice(0, 1, element);
             return element;
         }
@@ -111,7 +85,6 @@
             throw new Error("C'è qualcosa che nn va");
 
     }
-
 
     function getApiBasedOnApiChoice(choice)
     {
@@ -134,8 +107,23 @@
         }
     }
 
-    getUserChoice();
+    function populateAirportHtml(Airport){
 
+        const divEl = document.querySelector(".buildCard");
+        divEl.innerHTML = `<div className="card" style="width: 18rem;">
+                           <img src="/assets/aereo.jpg" className="card-img-top" alt="aereo">
+                           <div className="card-body">
+                           <h5 className="card-title">Airport Info</h5>
+                           <ul>
+                           <li>${Airport.name}</li>
+                           <li>${Airport.location}</li>
+                           <li>${Airport.state}</li>
+                           </ul>
+                           </div>
+                           </div>`
+    }
+
+    getUserChoice();
 
 
 
