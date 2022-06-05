@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container p-0 d-flex flex-column justify-content-center align-items-center">
-    <select id="list" class="mt-4" style=" width: 20rem" >
+    <select id="list" class="mt-4" style="width: 20rem">
         <option value=""></option>
         <option value="Airport Info">Airport Info</option>
         <option value="Corona Data">Corona Data</option>
@@ -27,15 +27,13 @@
         }
     }
 
-    class Aereoporto {
+    class Airport {
         constructor(name, location, state) {
             this.name = name;
             this.location = location;
             this.state = state;
         }
     }
-
-
     class Corona {
         constructor(TotalCases, NewCases, TotalDeaths, NewDeaths) {
             this.TotalCases = TotalCases;
@@ -54,8 +52,6 @@
         }
     }
 
-
-
     const getApiResponse = async function ()
     {
         const options = {
@@ -69,7 +65,7 @@
         const response = await fetch(getApiBasedOnApiChoice(userChoice()).url, options)
         const status = response.ok;
         if(status){
-
+            //console.log("Ciao questo è l'host "+ getApiBasedOnApiChoice(userChoice()).host + " e questo è l'url " + getApiBasedOnApiChoice(userChoice()).url);
             return await response.json();
         }else{
             throw new Error("Invalid");
@@ -86,20 +82,17 @@
             getApiResponse().then(result => {
                 if(userChoice() === "Airport Info")
                 {
-                    const aereoporto = new Aereoporto(result.name, result.location, result.state);
-
+                    const aereoporto = new Airport(result.name, result.location, result.state);
                     populateAirportHtml(aereoporto);
                 }
                 else if(userChoice() === "Corona Data")
                 {
                     const corona = new Corona(result[0].TotalCases, result[0].NewCases, result[0].TotalDeaths, result[0].NewDeaths);
-
                     populateCoronaHtml(corona);
                 }
                 else if (userChoice() === "Twitch Games Popularity"){
                     const game = new Game(result[0].Month, result[0].Year, result[0].Hours_watched, result[0].Avg_viewer_ratio);
                     populateGameHtml(game);
-
                 }
             })
         })
@@ -110,7 +103,6 @@
         const elementTaken = document.getElementById("list").value;
         if(typeof elementTaken === 'string')
         {
-            // spanEl.innerHTML = elementTaken;
             const element = elementTaken;
             choices.splice(0, 1, element);
             return element;
@@ -125,7 +117,7 @@
         {
             case "Airport Info":
                 const hostAirport = 'airport-info.p.rapidapi.com';
-                const urlAirport = 'https://airport-info.p.rapidapi.com/airport?iata=AAB';
+                const urlAirport = 'https://airport-info.p.rapidapi.com/airport?iata=BGY';
                 return new Choice(hostAirport, urlAirport);
             case "Corona Data":
                 const hostCorona = 'vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com';
@@ -189,20 +181,27 @@
                            </div>`
     }
 
+    function createMonthSelect(){
+        const card = document.querySelector(".buildCard");
+        card.innerHTML = `<select id="monthList" className="mt-2" style=" width: 20rem">
+                         <option value=""></option>
+                         <option value="01">January</option>
+                         <option value="02">February</option>
+                         <option value="03">March</option>
+                         <option value="04">April</option>
+                         <option value="05">May</option>
+                         <option value="06">June</option>
+                         <option value="07">July</option>
+                         <option value="08">August</option>
+                         <option value="09">September</option>
+                         <option value="10">October</option>
+                         <option value="11">November</option>
+                         <option value="12">December</option>
+                         </select>
+                         <br>`
+    }
+
     getUserChoice();
-
-    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08'));
-    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08'));
-    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08'));
-    // console.log(getGameResponse('https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08'));
-
-    // League of Legends https://twitch-game-popularity.p.rapidapi.com/game?name=League%20of%20Legends&year=2020&month=08
-
-    // Minecraft https://twitch-game-popularity.p.rapidapi.com/game?name=Minecraft&year=2020&month=08
-
-    // Fortnite https://twitch-game-popularity.p.rapidapi.com/game?name=Fortnite&year=2020&month=08
-
-    // 7 Days to Die https://twitch-game-popularity.p.rapidapi.com/game?name=7%20Days%20to%20Die&year=2020&month=08
 
 </script>
 </body>
